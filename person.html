@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .wrp{
+            width: 600px;
+            height: 30px;
+            margin:0 auto;
+        }
+        .box{
+            display: block;
+            margin:10px auto;
+            border:1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <input type="color" class="color">
+        <input type="range" class="range" max=50 min=1 value=10 step=1>
+        <button class="close">清空</button>
+        <button class="save">保存</button>
+  </div>
+    <canvas class="box" width="600" height="400"></canvas>
+    <script>
+        var color = document.querySelector('.color');
+        var range = document.querySelector('.range');
+        var box = document.querySelector('.box');
+        var close = document.querySelector('.close');
+        var save = document.querySelector('.save');
+        var aqi = box.getContext('2d');
+        var cc = '#000';
+        var line = range.value;
+        color.onchange =  function () {
+            cc = this.value;
+        }
+        range.onchange =  function () {
+            line = this.value;
+        }
+        close.onclick =  function () {
+            aqi.clearRect(0,0,600,400);
+        }
+        save.onclick =  function () {
+            location.href = 'img.html?img=' + box.toDataURL();
+        }
+        var p = {
+            x: box.offsetLeft,
+            y: box.offsetTop
+        }
+        var d = {},m = {};
+        box.onmousedown = function (e) {
+            d = {
+                x: e.clientX - p.x,
+                y:e.clientY - p.y
+            }
+            aqi.beginPath();
+            aqi.moveTo(d.x,d.y);
+            box.onmousemove =  function (e) {
+                m = {
+                    x: e.clientX - p.x,
+                    y:e.clientY - p.y
+                }
+                aqi.lineTo(m.x,m.y);console.log(color)
+                aqi.strokeStyle = cc;
+                aqi.lineWidth = line;
+                aqi.stroke();
+            }
+        }
+        document.onmouseup = function () {
+            box.onmousemove = null;
+        }
+    </script>
+</body>
+</html>

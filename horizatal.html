@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .box {
+            display: block;
+            border: 1px solid #000;
+        }
+        p{
+            width:600px;
+            height:50px;
+            line-height: 50px;
+            color:#000;
+            font-size: 10px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            text-align: right;
+        }
+        span{
+            display: inline-block;
+            width: 25px;
+            height: 15px;
+            margin-right:5px;
+            border-radius:4px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas class="box" width=600 height=400>
+        
+    </canvas>
+    <p>
+        <!-- <span></span>直接访问 -->
+    </p>
+    <script src="js/data.js"></script>
+    <script>
+        var aqi = document.querySelector('.box').getContext('2d');
+        aqi.translate(50, 350);
+        aqi.beginPath();
+        aqi.moveTo(0, -300);
+        aqi.lineTo(0, 0);
+        aqi.lineTo(-10, 0);
+        aqi.lineTo(0, 0);
+        aqi.lineTo(500, 0);
+        aqi.stroke();
+
+        var xLen = data.xAxis.data.length;
+        var xw = 500 / (xLen - 1);
+        for (var i = 0; i < xLen; i++) {
+            aqi.beginPath();
+            aqi.moveTo(i * xw, 0);
+            aqi.lineTo(i * xw, 10);
+            aqi.strokeStyle = '#000';
+            aqi.stroke();
+            aqi.textAlign = 'center';
+            aqi.textBaseline = 'top';
+            aqi.fillText(data.xAxis.data[i], i * xw, 15);
+            aqi.fill();
+            aqi.beginPath();
+            aqi.moveTo(i * xw, 0);
+            aqi.lineTo(i * xw, -300);
+            aqi.strokeStyle = '#ccc';
+            aqi.stroke();
+        }
+        var yLen = data.yAxis.data.length;
+        var yw = 300 / yLen;
+        for (var i = 0; i < yLen; i++) {
+            aqi.beginPath();
+            aqi.moveTo(0, -(i + 1) * yw);
+            aqi.lineTo(-10, -(i + 1) * yw);
+            aqi.lineWidth = 1;
+            aqi.strokeStyle = '#000';
+            aqi.stroke();
+            aqi.textAlign = 'center';
+            aqi.textBaseline = 'middle';
+            aqi.fillText(data.yAxis.data[i], -15, -(i * yw + yw / 2));
+            aqi.fill();
+        }
+        var A = [];
+        for(var k=0;k<7;k++){
+            var sum = 0;
+            var a = [];
+            for (var j = 0; j < data.series.length; j++) {
+                a.push({
+                    len:data.series[j].data[k],
+                    bg:data.series[j].color
+                })
+            }
+            A.push({
+                id:k,
+                deg: a
+            })
+        }
+        A.forEach(function (v,n) {
+            var start = 0, end = 0;
+            v.deg.forEach(function (val,m) {
+                end = val.len / 3000 * 500 + start;
+                aqi.beginPath();
+                aqi.lineWidth = 20;
+                aqi.moveTo(start,-(n * yw + yw / 2));
+                aqi.lineTo(end,-(n * yw + yw / 2));
+                aqi.strokeStyle = val.bg;
+                aqi.stroke();
+                aqi.textAlign = 'right';
+                aqi.textBaseline = 'middle';                
+                aqi.fillStyle = '#fff';
+                aqi.fillText(val.len,end,-(n * yw + yw / 2))
+                aqi.fill();
+                start = end;
+            });
+        });
+        var p = document.querySelector('p');
+        var str = '';
+        data.series.forEach(function (obj,r) {
+            str += `<span style="background:${obj.color}"></span>${obj.name}`;
+        });
+        p.innerHTML = str;
+    </script>
+</body>
+
+</html>

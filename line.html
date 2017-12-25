@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .box{
+            display: block;
+            margin:0 auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="box" width = 600 height = 400></canvas>
+    <script>
+        var box = document.querySelector('.box');
+        var aqi = box.getContext('2d');
+        aqi.translate(50,350);
+        aqi.beginPath();
+        aqi.moveTo(0,0);
+        aqi.lineTo(500,0);
+        aqi.stroke();
+        var data = [
+            {
+                x:  ['武憬','徐霞','丁超','杨学敏','小仙女','周一','白昭','韩雪','安茹'],
+                y: [0,1,2,3,4,5],
+                content: [1,5,3.2,2,1.3,4.6,3,2,2.5]
+            },
+            {
+                x:  ['武憬','徐霞','丁超','杨学敏','小仙女','周一','白昭','韩雪','安茹'],
+                y: [0,1,2,3,4,5],
+                content: [4,3,3.6,4.8,1.4,2.4,2,3,1.9]
+            },
+            {
+                x:  ['武憬','徐霞','丁超','杨学敏','小仙女','周一','白昭','韩雪','安茹'],
+                y: [0,1,2,3,4,5],
+                content: [3,2.5,4.1,3,1,4.6,3.5,2.8,3.8]
+            },
+        ];
+        var count = Math.floor(Math.random() * data.length);
+
+        function b (obj,i) {
+            var xw = 480 / obj.x.length;
+            aqi.beginPath();
+            obj.x.forEach(function (xv, j) {
+                aqi.textAlign = 'center';
+                aqi.textBaseline = 'top';
+                CanvasRenderingContext2D.prototype.fillLine = function (v,x,y) {
+                    var arr = v.split('');
+                    aqi.font = 12;
+                    arr.forEach(function (v,i) {
+                    aqi.fillStyle = '#000';
+                        aqi.fillText(v, x, i *y + 12);
+                    });
+                }
+                aqi.fillLine(xv,j * xw+20, 10);
+                //aqi.fillText(xv,j * xw+20, 10);
+                aqi.beginPath();
+                aqi.lineWidth = 20;
+                aqi.moveTo(j * xw+20, 0);
+                aqi.lineTo(j * xw+20, -obj.content[j] / 5 * 300);
+                aqi.strokeStyle = '#6d44f4';
+                aqi.stroke();
+                var max = Math.max.apply(Array,obj.content);
+                obj.content.forEach(function (c, j) {
+                    if (c === max) {
+                        aqi.beginPath();
+                        aqi.lineWidth = 20;
+                        aqi.moveTo(j * xw+20, 0);
+                        aqi.lineTo(j * xw+20, -obj.content[j] / 5 * 300);
+                        aqi.strokeStyle = '#f85e4b';
+                        aqi.stroke();
+                        aqi.font = 14;
+                        aqi.fillStyle = '#f85e4b';
+                        aqi.fillText('旅游', j * xw+20, -350);
+                        aqi.font = 20;
+                        aqi.fillText(c, j * xw+20, -330);
+                        aqi.fill();
+                    }
+                });
+            });
+
+            var yh = 300 / (obj.y.length - 1);
+            aqi.beginPath();
+            aqi.moveTo(0,0);
+            obj.y.forEach(function (yv, j) {
+                aqi.lineTo(0, i * yh);
+                aqi.textAlign = 'right';
+                aqi.textBaseline = 'middle';
+                aqi.fillStyle = '#000';
+                aqi.fillText(yv,-10, -j * yh);
+                aqi.fill();
+            });
+            var sum = 0;
+            obj.content.forEach(function (c, j) {
+                sum += c;
+            });
+            
+            var avg = sum / obj.content.length;
+            aqi.beginPath();
+            aqi.moveTo(0,-avg / 5 * 300);
+            aqi.lineTo(500,-avg / 5 * 300);
+            aqi.lineWidth = 1;
+            aqi.strokeStyle = '#f85e4b';
+            aqi.setLineDash([10,5]);
+            aqi.stroke();
+            aqi.fillStyle = '#f85e4b';
+            aqi.fillText('全网平均指数', 550,-avg / 5 * 300);
+        }
+        b (data[count], count);
+    </script>
+</body>
+</html>

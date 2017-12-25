@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .wrap{
+            position: relative;
+            width:80%;
+            height: 500px;
+            border:1px solid #ccc;
+            margin:10px auto;
+        }
+        p{
+            width:100%;
+            height:100%;
+            line-height: 500px;
+            text-align: center;
+            font-size: 4rem;
+        }
+        .box{
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <p></p>
+        <canvas class="box"></canvas>
+    </div>
+    <script>
+        var p = document.querySelector('p');
+        var wrap = document.querySelector('.wrap');
+        var can = document.querySelector('.box');
+        var arr = ['武憬','徐霞','丁超','杨学敏','小仙女','周一','白昭','韩雪','安茹'];
+        var names = Math.floor(Math.random() * arr.length);
+        p.innerHTML = arr[names];
+        var w = wrap.offsetWidth;
+        var h = wrap.offsetHeight;
+        can.width = w - 1;
+        can.height = h - 1;
+        var aqi = can.getContext('2d');
+        aqi.fillStyle = 'pink';
+        aqi.fillRect(0,0,w,h);
+        var m = {}, s = {};
+        var pl = wrap.offsetLeft;
+        var pt = wrap.offsetTop;
+        //透明
+        aqi.globalCompositeOperation = 'destination-out';
+        var flag = false;
+        can.addEventListener('touchstart', function (e) {
+            s = {
+                x: e.touches[0].clientX - pl,
+                y: e.touches[0].clientY - pt
+            };
+            flag = true;
+            aqi.beginPath();
+            aqi.moveTo(s.x,s.y);
+        });
+        can.addEventListener('touchmove', function (e) {
+            if (flag) {
+                m = {
+                x: e.touches[0].clientX - pl,
+                y: e.touches[0].clientY - pt
+            };
+                aqi.lineTo(m.x,m.y);
+                aqi.lineWidth = 10;
+                aqi.strokeStyle = 'skyblue';
+                aqi.stroke();
+                var date = aqi.getImageData(0,0,w,h).data;
+                var sum = 0;
+                date.forEach(function (v, i) {
+                    if (v === 0) {
+                        sum++;
+                    }
+                });
+                if (sum / date.length > 0.3) {
+                    aqi.clearRect(0,0,w,h);
+                }
+            }
+        });
+        can.addEventListener('touchend', function (e) {
+            flag = false;
+        });
+    </script>
+</body>
+</html>

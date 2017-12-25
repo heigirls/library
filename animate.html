@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box{
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="box" width="600" height="400"></canvas>
+    <script>
+        var aqi = document.querySelector('.box').getContext('2d');
+        aqi.translate(50,350);
+        function random(min,max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+        var arr = [];
+        for (var i = 0; i < 5; i++) {
+            arr.push({
+                x: i * 50,
+                y: -random(0,300)
+            })
+        }
+       
+        var num = 50;
+        var timer = null;
+        timer = setInterval(function () {
+            num--;
+            if (num <= 0) {
+                clearInterval(timer);
+                return false;
+            }
+            aqi.clearRect(-50,-350,600,400);
+            aqi.beginPath();
+            aqi.moveTo(0,0);
+            arr.forEach(function (v, i) {
+                aqi.lineTo(v.x / num, v.y);
+                aqi.stroke();
+            });
+
+        }, 1000 / 60);
+    </script>
+</body>
+</html>

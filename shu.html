@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box{
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="box" width=600 height=400></canvas>
+    <script>
+        var box = document.querySelector('.box');
+        var aqi = box.getContext('2d');
+        aqi.translate(50,350);
+        aqi.moveTo(0,-300);
+        aqi.lineTo(0, 0);
+        aqi.lineTo(500,0);
+        aqi.stroke();
+        var data = {
+            code:1,
+            yarea:[0,2,4,6,8,10,12],
+            xarea:[8,10,12,14,16,18,20,22],
+            data:[
+                {value:3,color:"#51BDDE"},
+                {value:11,color:"#D94545"},
+                {value:6,color:"#6CF309"},
+                {value:3,color:"#E20690"},
+                {value:5,color:"#FBBC03"},
+                {value:2,color:"#F80D97"},
+                {value:1,color:"#AD07F2"}
+            ]
+        }
+        var num = 500 / (data.xarea.length - 1);
+        for (var i = 0; i < (data.xarea.length - 1); i++) {
+            if (i > 0) {
+                aqi.beginPath();
+                aqi.lineWidth = 1;
+                aqi.moveTo(i * num, 0);
+                aqi.lineTo(i * num, -300);
+                aqi.strokeStyle = '#ccc';
+                aqi.stroke();
+            }
+            aqi.beginPath();
+            aqi.lineWidth = 1;
+            aqi.moveTo(i * num, 0);
+            aqi.lineTo(i * num, 15);
+            aqi.strokeStyle = '#000';
+            aqi.stroke();
+            aqi.fillText(data.xarea[i],i * num,25);
+            aqi.textAlign = 'center';
+            aqi.textBaseline = 'top';
+            aqi.fill();
+            aqi.beginPath();
+            aqi.moveTo(i * num + (num / 2), 0);
+            aqi.lineTo(i * num + (num / 2), - (data.data[i].value / 12 * 300));
+            aqi.lineWidth = num;
+            aqi.strokeStyle = data.data[i].color;
+            aqi.stroke();
+            aqi.fillText(data.data[i].value, i * num + (num / 2), - (data.data[i].value / 12 * 300)-15);
+            aqi.textAlign = 'center';
+            aqi.textBaseline = 'bottom';
+            aqi.fill();
+        }
+        // x=22
+            aqi.beginPath();
+            aqi.lineWidth = 1;
+            aqi.moveTo((data.xarea.length - 1) * num, 0);
+            aqi.lineTo((data.xarea.length - 1) * num, -300);
+            aqi.strokeStyle = '#ccc';
+            aqi.stroke();
+            aqi.beginPath();
+            aqi.lineWidth = 1;
+            aqi.moveTo((data.xarea.length - 1) * num, 0);
+            aqi.lineTo((data.xarea.length - 1) * num, 15);
+            aqi.strokeStyle = '#000';
+            aqi.stroke();
+            aqi.fillText(data.xarea[(data.xarea.length - 1)],(data.xarea.length - 1) * num,25);
+            aqi.textAlign = 'center';
+            aqi.textBaseline = 'top';
+            aqi.fill();
+        var n = 300 / (data.yarea.length - 1);
+        for (var i = 0; i < data.yarea.length; i++) {
+            if (i > 0) {
+                aqi.beginPath();
+                aqi.lineWidth = 1;
+                aqi.moveTo(0, -i * n);
+                aqi.lineTo(500, -i * n);
+                aqi.strokeStyle = '#ccc';
+                aqi.stroke();
+            }
+            aqi.beginPath();
+            aqi.lineWidth = 1;
+            aqi.moveTo(0,-i* n);
+            aqi.lineTo(-15,-i * n);
+            aqi.strokeStyle = '#000';
+            aqi.stroke();
+            aqi.fillText(data.yarea[i],-20,-i * n);
+            aqi.textAlign = 'center';
+            aqi.textBaseline = 'middle';
+            aqi.fill();
+        }
+    </script>
+</body>
+</html>

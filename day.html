@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box{
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="box" width=600 height=400></canvas>
+    <script>
+        var box = document.querySelector('.box');
+        var aqi = box.getContext('2d');
+        aqi.translate(50, 350);
+        aqi.moveTo(0, -300);
+        aqi.lineTo(0,10);
+        aqi.lineTo(0,0);
+        aqi.lineTo(500,0);
+        aqi.stroke();
+        var num = 500 / 7;
+        var data = {
+            "x": ['一','二','三','四','五','六','周'],
+            "y": [0,20,40,60,80,100],
+            "content": [80,90,95,82.5,85,97.5,95]
+        }
+        // x轴刻度
+        data.x.forEach(function (v,i) {
+            aqi.beginPath();
+            aqi.lineWidth = 1;
+            aqi.moveTo((i + 1) * num,0);
+            aqi.lineTo((i + 1) * num,10);
+            aqi.stroke();
+            aqi.fillText(v, i * num + (num / 2), 15);
+            aqi.fill();
+            aqi.textAlign = 'center';
+            aqi.textBaseline = 'middle';
+            aqi.beginPath();
+            aqi.moveTo(i * num + (num / 2), 0);
+            aqi.lineTo(i * num + (num / 2), - (data.content[i] / 100 * 300));
+            aqi.lineWidth = 20;
+            aqi.stroke();
+            aqi.fillText(data.content[i], i * num + (num / 2), - (data.content[i] / 100 * 300)-10);
+            aqi.textAlign = 'center';
+            aqi.textBaseline = 'bottom';
+            aqi.fill();
+        });
+        var n = 300 / (data.y.length - 1);
+        // y轴刻度
+        data.y.forEach(function (v,i) {
+            aqi.beginPath();
+            aqi.lineWidth = 1;
+            aqi.moveTo(0,-i * n);
+            aqi.lineTo(-10,-i * n);
+            aqi.fillText(v, -15, -i * n);
+            aqi.fill();
+            aqi.textAlign = 'right';
+            aqi.textBaseline = 'middle';
+            aqi.stroke();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box{
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="box" width=600 height=400></canvas>
+    <script>
+        var box = document.querySelector('.box');
+        var api = box.getContext('2d');
+        api.moveTo(50,0);
+        api.lineTo(50,350);
+        api.lineTo(600,350);
+        api.stroke();
+        // 关闭绘制路径
+        api.closePath();
+        // 重置起始点
+        api.translate(50,350);
+        line ('red');
+        line ('blue');
+        // 一条线
+        function line (color) {
+            var data = [];
+            var w = (box.clientWidth - 50) / 5;
+            for(var i = 0; i < 6; i++) {
+                data.push({
+                    x: i * w,
+                    y: -num(0, 350)
+                });
+            }
+            function num (min, max) {
+                return Math.floor(Math.random() * (max - min + 1) + min);
+            }
+
+            // 开始绘制图像
+            api.beginPath();
+            api.moveTo(data[0].x, data[0].y);
+            data.forEach(function (v,i) {
+                api.lineTo(v.x, v.y);
+                api.strokeStyle = color;
+                api.stroke();
+            });
+        }
+        
+    </script>
+</body>
+</html>
